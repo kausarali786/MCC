@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Material Cost Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+        df-messenger {
+            --df-messenger-button-titlebar-color: #007BFF; 
+            --df-messenger-button-bubble-color: #007BFF; 
+            --df-messenger-chat-background-color: #f4f4f4; 
+            position: fixed;
+            bottom: 20px; 
+            right: 20px; 
+            z-index: 1000; 
+            max-height: 90vh; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="removed BG.png" alt="MCC Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li> 
+                <li class="dropdown">
+                    <a href="#">Calculators</a>
+                    <div class="dropdown-content">
+                        <a href="Brick Calculator.html">Brick Calculator</a>
+                        <a href="Loft Calculator.html">Loft Calculator</a>
+                        <a href="Paint Calculator.html">Paint Calculator</a>
+                        <a href="tile calculator.html">Tile Calculator</a>
+                    </div>
+                </li>
+                <li><a href="material calculator.html">Cost Calculator</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>About Us</h1>
+        <p>Welcome to the Material Cost Calculator, your reliable partner in estimating construction material costs. We provide a variety of calculators to help you accurately budget for your construction projects, including brick, loft, paint, and tile calculators.</p>
+        <h2>Our Mission</h2>
+        <p>Our mission is to simplify the construction planning process by offering easy-to-use, accurate tools that help you estimate material costs efficiently.</p>
+        <h2>Our Story</h2>
+        <p>The Material Cost Calculator was developed by a team of construction professionals and software developers who recognized the need for reliable, user-friendly tools in the industry. We are committed to continuous improvement and value your feedback.</p>
+        <h2>Contact Us</h2>
+        <p>If you have any questions, suggestions, or need assistance, please feel free to contact us:</p>
+        <ul>
+            <li>Phone: <a href="tel:+971507683621">+(971) 507683621</a></li>
+            <li>Email: <a href="mailto:Costcalculatorinfo@gmail.com">Costcalculatorinfo@gmail.com</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        &copy; 2024 Material Cost Calculator. All rights reserved.
+    </footer>
+    
+    
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      chat-title="Material Cost Calculator Chatbot"
+      agent-id="your-agent-id"
+      language-code="en"
+    ></df-messenger>
+</body>
+</html>

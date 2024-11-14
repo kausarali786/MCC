@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Suggestions</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Suggestions container */
+        #suggestionsContainer {
+            display: none; 
+        }
+
+        /* Chatbot UI styles */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-box {
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            background-color: #ffffff;
+        }
+
+        .message {
+            margin: 10px 0;
+        }
+
+        .message.user {
+            text-align: right;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .message.bot {
+            text-align: left;
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+        #user-input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #send-button {
+            width: 20%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="removed BG.png" alt="MCC Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li class="dropdown">
+                    <a href="#">Calculators</a>
+                    <div class="dropdown-content">
+                        <a href="Brick Calculator.html">Brick Calculator</a>
+                        <a href="Loft Calculator.html">Loft Calculator</a>
+                        <a href="Paint Calculator.html">Paint Calculator</a>
+                        <a href="tile calculator.html">Tile Calculator</a>
+                    </div>
+                </li>
+                <li><a href="material calculator.html">Cost Calculator</a></li>
+            </ul>
+        </nav>
+    </header>    
+    
+    <div class="container">
+        <h1>Material Suggestions</h1>
+        <form id="suggestionsForm">
+            <label for="quality">Quality Preference:</label>
+            <input type="text" id="quality" name="quality" placeholder="Enter quality preference">
+
+            <label for="budget">Budget Constraint:</label>
+            <input type="number" id="budget" name="budget" placeholder="Enter budget limit" required>
+
+            <button type="submit">Get Suggestions</button>
+        </form>
+
+        <div id="suggestionsContainer">
+            <h3>Suggested Materials:</h3>
+            <ul id="suggestionsList"></ul>
+            <p id="totalCost" style="font-weight: bold;"></p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Material Cost Calculator. All rights reserved.
+    </footer>
+    
+    <!-- Custom Chatbot UI -->
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off" />
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Material suggestions logic
+        const materials = [
+            { name: "Red Clay", quality: "Low", price: 1.20 },
+            { name: "Fly Ash Brick", quality: "Medium", price: 1.60 },
+            { name: "Concrete", quality: "High", price: 2.50 },
+            { name: "Glazed Tile", quality: "High", price: 20.00 },
+            { name: "Ceramic Tile", quality: "Medium", price: 30.00 },
+        ];
+
+        document.getElementById("suggestionsForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const quality = document.getElementById("quality").value.toLowerCase(); 
+            const budget = parseFloat(document.getElementById("budget").value);
+
+            if (!quality || isNaN(budget) || budget <= 0) {
+                alert("Please enter valid preferences.");
+                return;
+            }
+
+            const suggestions = materials.filter(material => 
+                material.price <= budget && 
+                material.quality.toLowerCase().includes(quality) 
+            );
+
+            const suggestionsList = document.getElementById("suggestionsList");
+            suggestionsList.innerHTML = ""; 
+            let totalCost = 0;
+
+            suggestions.forEach(material => {
+                const li = document.createElement("li");
+                li.textContent = `${material.name} - Price: AED ${material.price.toFixed(2)} (Quality: ${material.quality})`;
+                suggestionsList.appendChild(li);
+                totalCost += material.price;
+            });
+
+            const suggestionsContainer = document.getElementById("suggestionsContainer");
+            suggestionsContainer.style.display = suggestions.length > 0 ? 'block' : 'none';
+
+            document.getElementById("totalCost").innerText = `Total Cost of Suggested Materials: AED ${totalCost.toFixed(2)}`;
+        });
+
+        // Chatbot functionality
+        document.getElementById("send-button").addEventListener("click", function() {
+            const userInput = document.getElementById("user-input").value.trim();
+            if (userInput) {
+                addMessage(userInput, "user");
+                document.getElementById("user-input").value = "";
+                generateBotResponse(userInput);
+            }
+        });
+
+        function addMessage(message, sender) {
+            const messageElement = document.createElement("div");
+            messageElement.className = `message ${sender}`;
+            messageElement.textContent = message;
+            document.getElementById("chat-box").appendChild(messageElement);
+            document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
+        }
+
+        function generateBotResponse(input) {
+            let botMessage;
+            if (input.toLowerCase().includes("hello")) {
+                botMessage = "Hello! How can I help you with your material suggestions?";
+            } else if (input.toLowerCase().includes("help")) {
+                botMessage = "You can ask me about material suggestions or quality options based on your budget.";
+            } else {
+                botMessage = "I'm here to help! Please ask any questions related to materials.";
+            }
+            addMessage(botMessage, "bot");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Material Cost Calculator</title>
+        <link rel="stylesheet" href="styles.css">
+        
+        <style>
+            df-messenger {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+        
+            /* Styles for Chatbot UI */
+            .chat-container {
+                position: fixed;
+                bottom: 50px;
+                /* Adjusted to move chatbot up */
+                right: 20px;
+                z-index: 1000;
+                width: 350px;
+                background-color: #e0e0e0;
+                /* Slightly darker background */
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        
+            .chat-box {
+                padding: 15px;
+                height: 300px;
+                overflow-y: auto;
+                background-color: #f9f9f9;
+            }
+        
+            .message {
+                margin: 10px 0;
+            }
+        
+            .message.user {
+                text-align: right;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px;
+                border-radius: 10px;
+            }
+        
+            .message.bot {
+                text-align: left;
+                background-color: #f1f1f1;
+                padding: 10px;
+                border-radius: 10px;
+            }
+        
+            .input-container {
+                display: flex;
+                padding: 10px;
+                background-color: #fff;
+            }
+        
+            #user-input {
+                width: 80%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        
+            #send-button {
+                width: 20%;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 10px;
+            }
+        </style>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById('send-button').addEventListener('click', function () {
+                    const userInput = document.getElementById('user-input').value.trim();
+                    if (userInput) {
+                        displayMessage(userInput, 'user');
+                        document.getElementById('user-input').value = '';
+                        sendToAPI(userInput);
+                    }
+                });
+
+                function displayMessage(message, sender) {
+                    const chatBox = document.getElementById('chat-box');
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', sender);
+                    messageElement.innerText = message;
+                    chatBox.appendChild(messageElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                async function sendToAPI(userMessage) {
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            // Corrected "prompt" to "message" to match Flask API expectation
+                            body: JSON.stringify({ message: userMessage })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        const data = await response.json();
+                        const botMessage = data.response;
+                        displayMessage(botMessage, 'bot');
+                    } catch (error) {
+                        console.error('Error:', error);
+                        displayMessage("Sorry, something went wrong!", 'bot');
+                    }
+                }
+            });
+        </script>
+    </head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="removed BG.png" alt="MCC Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li> 
+                <li class="dropdown">
+                    <a href="#">Calculators</a>
+                    <div class="dropdown-content">
+                        <a href="Brick Calculator.html">Brick Calculator</a>
+                        <a href="Loft Calculator.html">Loft Calculator</a>
+                        <a href="Paint Calculator.html">Paint Calculator</a>
+                        <a href="tile calculator.html">Tile Calculator</a>
+                    </div>
+                </li>
+                <li><a href="material calculator.html">Cost Calculator</a></li>
+                <li><a href="Material suggestion.html">Material Suggestions</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>Paint Calculator</h1>
+        <form id="paintForm">
+            <div class="form-group">
+                <label for="wallLength">Length of Wall (m):</label>
+                <input type="number" id="wallLength" name="wallLength" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="wallHeight">Height of Wall (m):</label>
+                <input type="number" id="wallHeight" name="wallHeight" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="coverage">Paint Coverage (m²/liter):</label>
+                <input type="number" id="coverage" name="coverage" step="0.01" required>
+            </div>
+            <button type="submit" class="btn">Calculate</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;">
+            <h2>Results</h2>
+            <p id="paintNeeded"></p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Material Cost Calculator. All rights reserved.
+    </footer>
+
+    <!-- Custom Chatbot UI -->
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off" />
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+</body>
+</html>
